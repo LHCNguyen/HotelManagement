@@ -1,0 +1,159 @@
+/* Cấu hình chung */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.search-bar {
+    max-width: 400px;
+}
+
+.cart-icon {
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+.cart-icon:hover {
+    color: #cce5ff;
+}
+
+header .btn {
+    margin-left: 10px;
+}
+
+/* Phần chính */
+main h2, main h3 {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.intro p {
+    font-size: 18px;
+    margin-top: 10px;
+    color: #555;
+}
+
+/* Dịch vụ */
+#services i {
+    color: #007bff;
+}
+
+#services .col-md-4 {
+    margin-top: 20px;
+}
+
+#services h4 {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Các loại phòng */
+.card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.card-text {
+    color: #555;
+}
+
+/* Đánh giá khách hàng */
+#testimonials {
+    background-color: #e9ecef;
+}
+
+blockquote {
+    font-style: italic;
+    color: #555;
+}
+
+.blockquote-footer {
+    color: #007bff;
+    font-size: 0.9rem;
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: #ddd;
+}
+
+footer p {
+    margin: 10px 0;
+}
+
+footer .social-icon {
+    font-size: 1.2rem;
+    margin: 0 8px;
+    color: #ddd;
+    transition: color 0.3s;
+}
+
+footer .social-icon:hover {
+    color: #007bff;
+}
+
+/* Hiệu ứng cho nút */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}

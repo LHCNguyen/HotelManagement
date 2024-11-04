@@ -1,10 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trang quản lý khách sạn cung cấp dịch vụ phòng, nhà hàng và spa chất lượng cao.">
+    <meta name="keywords" content="hotel, quản lý khách sạn, dịch vụ phòng, nhà hàng, spa">
+    <title>Hotel Management</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Hello</h1>
+    <!-- Phần Head -->
+    <div class="container-fluid">
+        <!-- Thanh điều hướng -->
+        <header class="navbar d-flex align-items-center justify-content-between">
+            <h1 class="logo">Hotel Management</h1>
+
+            <!-- Thanh tìm kiếm -->
+            <input type="text" class="search-bar form-control" placeholder="Tìm kiếm...">
+
+            <!-- Icon giỏ hàng -->
+            <a href="#" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+
+            <!-- Nút Đăng nhập và Đăng ký -->
+            <div>
+                <a href="#" class="btn btn-primary me-2">Đăng nhập</a>
+                <a href="#" class="btn btn-secondary">Đăng ký</a>
+            </div>
+        </header>
+
+        <!-- Nội dung chính -->
+        <main class="my-5">
+            <section class="intro text-center">
+                <h2>Chào mừng đến với Hotel Management</h2>
+                <p>Vui lòng chọn một trong các tùy chọn bên dưới:</p>
+            </section>
+
+            <!-- Dịch vụ -->
+            <section id="services" class="my-5">
+                <h3 class="text-center">Dịch vụ của chúng tôi</h3>
+                <div class="row text-center mt-4">
+                    <div class="col-md-4">
+                        <i class="fas fa-bed fa-2x mb-2"></i>
+                        <h4>Phòng nghỉ</h4>
+                        <p>Phòng sạch sẽ và tiện nghi, đảm bảo giấc ngủ thoải mái cho bạn.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="fas fa-utensils fa-2x mb-2"></i>
+                        <h4>Nhà hàng</h4>
+                        <p>Thưởng thức ẩm thực đa dạng và phong phú tại nhà hàng của chúng tôi.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="fas fa-spa fa-2x mb-2"></i>
+                        <h4>Spa & Thư giãn</h4>
+                        <p>Thư giãn với dịch vụ spa cao cấp, mang đến trải nghiệm tuyệt vời.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Các loại phòng -->
+            <section id="room-types" class="my-5">
+                <h3 class="text-center">Các loại phòng</h3>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="images/phong-don.jpg" class="card-img-top" alt="Phòng Đơn">
+                            <div class="card-body">
+                                <h5 class="card-title">Phòng Đơn</h5>
+                                <p class="card-text">Giá: 1.000.000 VNĐ/đêm</p>
+                                <a href="#" class="btn btn-primary">Đặt phòng</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="images/phong-doi.jpg" class="card-img-top" alt="Phòng Đôi">
+                            <div class="card-body">
+                                <h5 class="card-title">Phòng Đôi</h5>
+                                <p class="card-text">Giá: 1.800.000 VNĐ/đêm</p>
+                                <a href="#" class="btn btn-primary">Đặt phòng</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="images/phong-vip.jpg" class="card-img-top" alt="Phòng VIP">
+                            <div class="card-body">
+                                <h5 class="card-title">Phòng VIP</h5>
+                                <p class="card-text">Giá: 3.000.000 VNĐ/đêm</p>
+                                <a href="#" class="btn btn-primary">Đặt phòng</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Đánh giá khách hàng -->
+            <section id="testimonials" class="bg-light py-5">
+                <h3 class="text-center">Đánh giá từ khách hàng</h3>
+                <div class="row mt-4">
+                    <div class="col-md-4 text-center">
+                        <blockquote class="blockquote">
+                            <p>"Dịch vụ tuyệt vời và phòng rất sạch sẽ. Chúng tôi đã có một kỳ nghỉ đáng nhớ!"</p>
+                            <footer class="blockquote-footer">Nguyễn Văn A</footer>
+                        </blockquote>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <blockquote class="blockquote">
+                            <p>"Nhân viên thân thiện và nhiệt tình. Chắc chắn sẽ quay lại!"</p>
+                            <footer class="blockquote-footer">Trần Thị B</footer>
+                        </blockquote>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <blockquote class="blockquote">
+                            <p>"Vị trí đẹp, gần trung tâm và dễ di chuyển."</p>
+                            <footer class="blockquote-footer">Lê Văn C</footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Phần Footer -->
+        <footer class="footer bg-dark text-light py-3">
+            <div class="container text-center">
+                <p>&copy; 2024 Hotel Management. All rights reserved.</p>
+                <p>Theo dõi chúng tôi:
+                    <a href="#" class="social-icon text-light"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-icon text-light"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon text-light"><i class="fab fa-instagram"></i></a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
