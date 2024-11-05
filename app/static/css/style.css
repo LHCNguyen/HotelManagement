@@ -166,3 +166,11 @@ footer .social-icon:hover {
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+.text-center{
+    display: flex;
+    text-align: center;
+
+}
+.center{
+    text-align: center;
+}
