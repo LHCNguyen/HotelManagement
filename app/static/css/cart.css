@@ -1,0 +1,73 @@
+/* Định dạng chung */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Header */
+header.navbar {
+    background-color: #343a40;
+    color: #fff;
+}
+
+header .logo {
+    color: #fff;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+header .btn {
+    color: #fff;
+}
+
+/* Container */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Bảng giỏ hàng */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.table {
+    margin-top: 20px;
+    width: 100%;
+    border: 1px solid #dee2e6;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+tfoot {
+    font-weight: bold;
+}
+
+.text-end {
+    text-align: right;
+}
+
+/* Nút Thanh toán */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}

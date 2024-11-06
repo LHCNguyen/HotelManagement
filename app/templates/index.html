@@ -19,17 +19,24 @@
             <input type="text" class="search-bar form-control" placeholder="Tìm kiếm...">
 
             <!-- Icon giỏ hàng -->
-            <a href="#" class="cart-icon">
+            <a href="{{ url_for('cart') }}" class="cart-icon">
                 <i class="fas fa-shopping-cart"></i>
             </a>
 
             <!-- Nút Đăng nhập và Đăng ký -->
-            <div>
+            <div id="user-auth">
+                {% if logged_in %}
+                    <!-- Hiển thị Icon User khi đã đăng nhập -->
+                <a href="{{ url_for('profile') }}" class="user-icon">
+                    <i class="fas fa-user-circle fa-2x"></i>
+                </a>
+                {% else %}
+                    <!-- Hiển thị nút Đăng nhập và Đăng ký khi chưa đăng nhập -->
                 <a href="{{ url_for('login') }}" class="btn btn-primary me-2">Đăng nhập</a>
-                <a href="{{ url_for('register') }} " class="btn btn-secondary">Đăng ký</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">Đăng ký</a>
+                 {% endif %}
             </div>
         </header>
-
             <section class="intro center">
                 <h2>Chào mừng đến với Hotel Management</h2>
             </section>
