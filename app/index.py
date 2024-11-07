@@ -1,5 +1,7 @@
-from flask import Flask, render_template, session, redirect, url_for
+from pickle import FRAME
 
+from flask import Flask, render_template, session, redirect, url_for
+from app.models import *
 app = Flask(__name__)
 
 @app.route('/')
