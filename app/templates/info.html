@@ -1,0 +1,146 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Xem thông tin {% endblock %}
+
+{% block content %}
+<style>
+    .room-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.booking-section {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+.rules-table {
+    margin-top: 20px;
+}
+
+.rating-button {
+    background-color: #ffc107;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.map-section {
+    width: 100%;
+    height: 400px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.comments-section {
+    margin-top: 20px;
+}
+</style>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="booking-section">
+                    <img src="{{ room.image }}" alt="Room Image" class="room-image">
+                    <h2 class="mt-3">{{ room.style_room }}</h2>
+                    <p>Giá: <strong>{{ room.price }} VNĐ
+                    {% if room.status == false %}
+                        <p class="card-text">Còn phòng</p>
+                    {% else %}
+                        <p class="card-text">Hết phòng</p>
+                    {% endif %}
+                    </strong></p>
+                    <input type="button"
+                               onclick="addToCart({{ room.id }})"
+                               value="Đặt Phòng"
+                               class="btn btn-primary" {% if room.status == true %}disabled{% endif %}>
+                </div>
+                <table class="table table-bordered rules-table">
+                    <thead>
+                        <tr>
+                            <th>Địa chỉ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ room.address }}</td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Nội Quy Phòng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ room.description }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="rating-button">Đánh giá</button>
+            </div>
+            <div class="col-md-5">
+                <div class="map-section">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.764168539956!2d106.68809457331866!3d10.675404689467303!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31753100099ce9ed%3A0xdb6079801f0735ea!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBN4bufIFRQLiBI4buTIENow60gTWluaCAoY8ahIHPhu58gMyk!5e0!3m2!1svi!2s!4v1731736557747!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h3>Bình Luận</h3>
+            <form>
+                <div class="form-group">
+                    <label for="comment">Viết bình luận của bạn:</label>
+                    <textarea class="form-control" id="comment" rows="3" placeholder="Nhập bình luận..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Gửi</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+    function initMap() {
+        const latitude = {{ room.latitude }};
+        const longitude = {{ room.longitude }};
+        const address = "{{ room.address }}";
+
+        if (latitude && longitude) {
+            const location = { lat: latitude, lng: longitude };
+
+            // Khởi tạo bản đồ
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15,
+                center: location,
+            });
+
+            // Thêm marker
+            new google.maps.Marker({
+                position: location,
+                map: map,
+                title: address,
+            });
+        } else {
+            document.getElementById("map").innerHTML =
+                "Không thể hiển thị bản đồ do lỗi định vị địa chỉ.";
+        }
+    }
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1TzAFqgr6tiheHwb_GELoo0JQZelZbwI&callback=initMap">
+</script>
+{% endblock %}

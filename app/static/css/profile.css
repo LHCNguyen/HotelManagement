@@ -1,27 +1,4 @@
-/* Định dạng chung */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
 
-/* Header */
-header.navbar {
-    background-color: #343a40;
-    color: #fff;
-}
-
-header .logo {
-    color: #fff;
-    font-size: 1.5rem;
-    text-decoration: none;
-}
-
-header .btn {
-    color: #fff;
-}
-
-/* Container */
 .container {
     max-width: 700px;
     margin: 0 auto;
@@ -37,11 +14,6 @@ h2 {
     margin-bottom: 20px;
 }
 
-.card {
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
 .profile-info {
     display: flex;
@@ -70,14 +42,4 @@ h2 {
 .text-end .btn {
     margin-left: 10px;
     width: 150px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
 }
