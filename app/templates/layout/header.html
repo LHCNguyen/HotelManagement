@@ -15,9 +15,13 @@
         <form method="get" action="/">
             <input name="kw" type="text" class="search-bar form-control" placeholder="Tìm kiếm...">
         </form>
-        <a href="{{ url_for('cart') }}" class="cart-icon">
+        <a href="{{ url_for('cart.carts') }}" class="cart-icon">
             <i class="fas fa-shopping-cart"></i>
             <span id="cart-count" class="badge badge-pill badge-danger">{{ cart_stats.total_quantity }}</span>
+        </a>
+
+        <a href="{{ url_for('user_info') }}" class="user-icon">
+            <i class="fas fa-user fa-2x"></i>
         </a>
 
         <!-- User Authentication Links -->

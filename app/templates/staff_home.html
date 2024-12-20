@@ -1,0 +1,53 @@
+{% extends 'staff.html' %}
+
+{% block content %}
+
+ <style>
+        .room-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .status {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .status.available {
+            color: green;
+        }
+        .status.unavailable {
+            color: red;
+        }
+        .setup-buttons {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+    <div class="container mt-4">
+        <h1 class="text-center">Danh Sách Phòng</h1>
+        <div class="row">
+            {% for p in produces %}
+            <div class="col-md-4">
+                <div class="room-card">
+                    <h3>{{ p.room_number }}</h3>
+                    {% if not p.status  %}
+                        <p class="status available">Còn phòng</p>
+                    {% else %}
+                        <p class="status available">Hết phòng</p>
+                    {% endif %}
+                    <button class="btn btn-warning btn-sm setup-btn">Set up</button>
+                    <div class="setup-buttons">
+                        <button class="btn btn-success btn-sm" onclick="setStatus(this, 'available')">Còn phòng</button>
+                        <button class="btn btn-danger btn-sm" onclick="setStatus(this, 'unavailable')">Hết phòng</button>
+                    </div>
+                </div>
+            </div>
+         {% endfor %}
+        </div>
+    </div>
+
+{% endblock%}

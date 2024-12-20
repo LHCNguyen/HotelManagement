@@ -1,10 +1,17 @@
 import math
-from flask import Flask, render_template, session, redirect, url_for, request, jsonify
+import time
+from os import abort
+
+from flask import render_template, url_for, jsonify, flash
+from flask_login import login_required
+
 import dao
 
-from flask import redirect, request, render_template_string
+from flask import request
 
 from admin import *
+from app import LoginManager, app
+from app.vnpays.forms import PaymentForm
 
 
 @app.route('/')
@@ -18,13 +25,175 @@ def home():
     cart_stats = session.get('cart_stats', {"total_quantity": 0})
     total_pages = math.ceil(num / page_size)
     return render_template(
-        'index.html', pages=total_pages, produces=pro, cart_stats=cart_stats, kw=kw, room_id=room_id, page=page)
+        'layout.html', pages=total_pages, produces=pro, cart_stats=cart_stats, kw=kw, room_id=room_id, page=page)
+
+
+
+
+@app.route('/staff')
+def staff():
+    return render_template('staff.html')
+
+@app.route('/staff/home')
+def staff_home():
+    room_id = request.args.get('room_id')
+    pro = dao.get_room_staff(room_id)
+    print(f"Room ID: {room_id}, Data: {pro}")
+    if pro is None:  # Xử lý khi không có dữ liệu
+        pro = []
+    return render_template('staff_home.html', room_id=room_id, produces=pro)
+
+
+
+@app.route('/staff/booking')
+def staff_booking():
+    return render_template('staff_booking.html')
+
+
+@app.route('/staff/rental')
+def staff_rental():
+    return render_template('staff_rental.html')
+
+
+
+@app.route('/staff/search')
+def search():
+    return render_template('search.html')
+
 
 
 @app.route('/rooms/<id>')
 def info_room(id):
     room = dao.get_room_by_id(id)
-    return render_template('info.html', room=room)
+    if room is None:
+        abort(404)  # Trả về lỗi 404 nếu phòng không tồn tại
+
+        # Lấy danh sách bình luận liên quan đến phòng
+    comments = Comment.query.filter_by(room_id=id).order_by(Comment.create_at.desc()).all()
+
+    # Render template với dữ liệu phòng và bình luận
+    return render_template('info.html', room=room, comments=comments)
+
+
+@app.route('/vnpay_info', methods=['GET', 'POST'])
+@login_required
+def vnpay_info():
+    cart = session.get('cart', [])
+    if not cart:
+        flash("Giỏ hàng của bạn đang trống!", "warning")
+        return redirect(url_for('cart.cart'))
+
+    # Lấy thông tin phòng từ dao và tính tổng giá trị
+    rooms = [dao.get_room_by_id(room_id) for room_id in cart if dao.get_room_cart(room_id)]
+    total_amount = sum(room.price for room in rooms)
+
+    # Tạo một order_id duy nhất từ thời gian hiện tại
+    order_id = str(int(time.time()))
+    session['total_amount'] = total_amount
+    session['order_id'] = order_id
+    form = PaymentForm(request.form)
+    return render_template('payment.html', form=form, total_amount=total_amount, order_id=order_id)
+
+@app.route('/payment_success')
+@login_required
+def payment_success():
+    return render_template('thanks.html')
+
+
+@app.route('/booking', methods=['GET', 'POST'])
+def booking_form():
+    if not current_user.is_authenticated:
+        flash("Bạn cần đăng nhập trước khi đặt phòng.", "warning")
+        return redirect(url_for('login'))
+
+    user_roles = [role.position for role in current_user.roles]
+    if 'User' not in user_roles:
+        flash("Bạn cần đăng nhập bằng tài khoản có quyền User để đặt phòng.", "warning")
+        return redirect(url_for('login', next=request.url))
+    cart = session.get('cart', [])
+    rooms = [dao.get_room_by_id(room_id) for room_id in cart if dao.get_room_cart(room_id)]
+    return render_template('booking.html', rooms=rooms, fullname=current_user.fullname)
+
+@app.route('/user/login', methods=['POST'])
+def user_login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    user = dao.authenticated_login(username=username, password=password)
+    if user:
+        login_user(user)
+        if 'User' in [role.position for role in user.roles]:
+            return redirect(url_for('home'))
+        elif 'Staff' in [role.position for role in user.roles]:
+            return redirect(url_for('staff_home'))
+    else:
+        return render_template('login.html', error="Sai tên đăng nhập hoặc mật khẩu")
+
+
+@app.route('/user_info')
+def user_info():
+    if current_user.is_authenticated:
+        user_roles = [role.position for role in current_user.roles]
+        is_user_role = 'User' in user_roles  # Kiểm tra xem có role 'User' không
+        return render_template('user_info.html', is_user_role=is_user_role)
+    else:
+        return render_template('user_info.html', is_user_role=False)
+
+
+@app.route('/add_comment', methods=['POST'])
+@login_required
+def add_comment():
+    comment_text = request.json.get('comment')
+    room_id = request.json.get('room_id')
+
+    if not comment_text or not room_id:
+        return jsonify({"error": "Thiếu dữ liệu"}), 400
+
+    new_comment = Comment(
+        comments=comment_text,
+        user_id=current_user.id,
+        room_id=room_id
+    )
+    db.session.add(new_comment)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Thêm bình luận thành công",
+        "username": current_user.username,
+        "avatar": "static/images/avatar.png",  # Đường dẫn đến ảnh mặc định
+        "comment": comment_text,
+        "created_at": new_comment.create_at.strftime('%Y-%m-%d %H:%M:%S')
+    })
+
+@app.route('/add_rating', methods=['POST'])
+@login_required
+def add_rating():
+    rating = request.json.get('rating')
+    room_id = request.json.get('room_id')
+
+    if not rating or not room_id:
+        return jsonify({"error": "Thiếu dữ liệu"}), 400
+
+    new_evaluation = Evaluation(
+        point=rating,
+        user_id=current_user.id,
+        room_id=room_id
+    )
+    db.session.add(new_evaluation)
+    db.session.commit()
+
+    return jsonify({"message": "Thêm đánh giá thành công"})
+
+
+# @app.route('/room/<int:room_id>')
+# def room_detail(room_id):
+#     # Lấy thông tin phòng dựa vào room_id
+#     room = Room.query.get_or_404(room_id)
+#
+#     # Lấy danh sách tất cả bình luận liên quan đến phòng này
+#     comments = Comment.query.filter_by(room_id=room_id).order_by(Comment.create_at.desc()).all()
+#
+#     # Render template với dữ liệu phòng và bình luận
+#     return render_template('room_detail.html', room=room, comments=comments)
 
 
 @app.route('/login_user')
@@ -37,67 +206,6 @@ def register():
     return render_template('register.html')
 
 
-#
-# @app.route('/profile')
-# def profile():
-#     # Kiểm tra nếu người dùng đã đăng nhập
-#     if 'user_id' in session:
-#         # Lấy thông tin user từ cơ sở dữ liệu hoặc session
-#         user_info = {
-#             "name": "Nguyễn Văn A",
-#             "email": "nguyenvana@example.com",
-#         }
-#         return render_template('profile.html', user=user_info)
-#     else:
-#         # Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
-#         return redirect(url_for('login'))
-
-
-@app.route('/cart')
-def cart():
-    cart = session.get('cart', [])
-    rooms_in_cart = []
-    total_price = 0
-    for room_id in cart:
-        room = dao.get_room_cart(room_id)
-        if room:
-            rooms_in_cart.append(room)
-            total_price += room.price
-    cart_stats = session.get('cart_stats', {"total_quantity": len(cart)})
-
-    return render_template('cart.html', rooms=rooms_in_cart, total=total_price, cart_stats=cart_stats)
-
-
-@app.route('/add_to_cart/<int:room_id>', methods=['POST'])
-def add_to_cart(room_id):
-    cart = session.get('cart', [])
-    if room_id not in cart:
-        cart.append(room_id)
-    session['cart'] = cart
-    session['cart_stats'] = {"total_quantity": len(cart)}  # Cập nhật số lượng
-
-    return jsonify({"success": True, "cart_size": session['cart_stats']['total_quantity']})
-
-
-@app.route('/remove_from_cart/<int:room_id>', methods=['POST'])
-def remove_from_cart(room_id):
-    cart = session.get('cart', [])
-    if room_id in cart:
-        cart.remove(room_id)
-    session['cart'] = cart
-
-    rooms_in_cart = [dao.get_room_cart(room_id) for room_id in cart]
-    total_price = sum(room.price for room in rooms_in_cart if room)
-
-    cart_stats = {"total_quantity": len(cart)}
-    session['cart_stats'] = cart_stats
-
-    return jsonify({
-        "success": True,
-        "cart_size": cart_stats['total_quantity'],
-        "total": total_price
-    })
-
 @app.context_processor
 def common_responses():
     cart = session.get('cart', [])
@@ -105,5 +213,41 @@ def common_responses():
     return {
         'cart_stats': cart_stats
     }
+
+
+@app.route('/admin/login', methods=['POST'])
+def admin_login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    user = dao.admin_login(username=username, password=password)
+    if user:
+        login_user(user)
+        session['user_role'] = 'Admin'
+        return redirect('/admin')
+    else:
+        flash("Tài khoản hoặc mật khẩu không đúng, hoặc bạn không có quyền truy cập!", "danger")
+        return redirect('/admin')
+
+
+@app.route('/logout_staff')
+def logout_staff():
+    if current_user.is_authenticated and 'Staff' in [role.position for role in current_user.roles]:
+        dao.logout_user_handler()
+        return redirect(url_for('login'))
+
+@app.route('/logout_user')
+def logout_user():
+    if current_user.is_authenticated and 'User' in [role.position for role in current_user.roles]:
+        dao.logout_user_handler()
+        return redirect(url_for('login'))
+
+
+@LoginManager.user_loader
+def user_load(user_id):
+    return dao.get_user_by_id(user_id)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)

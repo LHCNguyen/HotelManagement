@@ -1,4 +1,6 @@
 from urllib.parse import quote
+
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_admin import Admin
@@ -11,7 +13,20 @@ app.config["SQLALCHEMY_DATABASE_URI"] = ("mysql+pymysql://root:%s@localhost/dbho
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["PAGE_SIZE"] = 6
 
-
 db = SQLAlchemy(app)
 
+
+
 admin = Admin(app, name='Quản lý Khách Sạn', template_mode='bootstrap4')
+
+LoginManager = LoginManager(app=app)
+
+from app.cart.routes import cart
+from app.vnpays.views import vnpay
+from app.user.routes import user_register
+from app.staff.routes import staff
+
+app.register_blueprint(cart)
+app.register_blueprint(vnpay)
+app.register_blueprint(user_register)
+app.register_blueprint(staff)
